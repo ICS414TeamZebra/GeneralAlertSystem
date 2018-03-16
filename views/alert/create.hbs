@@ -1,0 +1,35 @@
+{{#if live}}
+<div class="warning banner live">YOU ARE IN LIVE ALERT MODE</div>
+{{/if}}
+<div class="alert create {{ alertType }}">
+  <h2>Alert Create</h2>
+  <form action="{{urlForm}}" method="post">
+    <h3><label for="event">Event</label></h3>
+    <select id="event" name="event">
+      <option selected></option>
+      {{#each events}}
+      <option value={{id}}{{#if selected}} selected{{/if}}>{{name}}</option>
+      {{/each}}
+    </select>
+    <h3><label for="message">Message</label></h3>
+    <textarea id="message" name="message">{{message}}</textarea>
+    <fieldset class="methods">
+      <h3><legend>Methods</legend></h3>
+      <ul>
+        {{#each methods}}
+        <li><label for="method-{{id}}"></label><input type="checkbox" id="method-{{id}}" name="methods" value="{{id}}"{{#if selected}} checked{{/if}}>{{name}}</li>
+        {{/each}}
+      </ul>
+    </fieldset>
+    <fieldset class="locations">
+      <h3><legend>Locations</legend></h3>
+      <ul>
+        {{#each locations}}
+          <li><label for="location-{{id}}"></label><input type="checkbox" id="location-{{id}}" name="location" value="{{id}}{{#if selected}} checked{{/if}}">{{name}}</li>
+        {{/each}}
+      </ul>
+    </fieldset>
+    <button type="submit" name="back" value="Back">Back</button>
+    <button type="submit" name="continue" value="Continue">Continue</button>
+  </form>
+</div>

@@ -1,5 +1,9 @@
 # GUIDE
 
+**a guide on how this project was set up via commands from an empty directory. assumes npm was installed **
+
+---
+
 install express generator command:
 
 ```sh
@@ -42,4 +46,29 @@ configured as
   No
 ? What format do you want your config file to be in?
   JavaScript
+```
+
+database
+
+```sh
+npm install knex --save
+npm install sqlite3 --save
+```
+
+testing
+
+```
+npm install mocha chai --save-dev
+```
+
+add some scripts to package.json
+
+```json
+...
+"scripts" {
+	...
+	"test": "./node_modules/.bin/mocha **/**.spec.js",
+	"lint": "./node_modules/.bin/eslint **/**.js"
+}
+...
 ```

@@ -1,0 +1,38 @@
+{{#if live}}
+<div class="warning banner live">YOU ARE IN LIVE ALERT MODE</div>
+{{/if}}
+<div class="alert confirm {{ alertType }}">
+  <h2>Alert Confirmation</h2>
+  <div class="summary">
+    {{#with summary}}
+    <h3>Event: <span class="event">{{ event }}</span></h3>
+    <h3>Message:</h3>
+    <p>{{ message }}</p>
+    <h3>Methods:</h3>
+    <ul class="methods">
+      {{#each methods}}
+        <li{{#if selected}} class="selected"{{/if}}>{{ name }}</li>
+      {{/each}}
+    </ul>
+    <h3>Locations:</h3>
+    <ul class="locations">
+      {{#each locations}}
+        <li{{#if selected}} class="selected"{{/if}}>{{ name }}</li>
+      {{/each}}
+    </ul>
+    {{/with}}
+  </div>
+  <form action="{{urlForm}}" method="post">
+    <fieldset class="supervisor">
+      <h3><legend>Supervisor Confirmation</legend></h3>
+      <label for="username">Username: <input type="text" id="username" name="username">{{username}}</input></label>
+      <label for="password">Password: <input type="password" id="password" name="password"></input></label>
+    </fieldset>
+    <h3><label for="confirm">Type {{confirmString}} to confirm.</label></h3>
+    <input type="text" id="confirm" name="confirm"></input>
+
+  <div class="buttons">
+    <button type="submit" name="back" value="Back">Back</button>
+    <button type="submit" name="send" value="Send">Send</button>
+  </div></form>
+</div>

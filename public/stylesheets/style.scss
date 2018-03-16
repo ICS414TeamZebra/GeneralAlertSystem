@@ -1,0 +1,74 @@
+// THIS IS THE FILE YOU EDIT
+
+body {
+  padding: 50px;
+  font: 14px "Lucida Grande", Helvetica, Arial, sans-serif;
+}
+
+a {
+  color: #00B7FF;
+}
+
+.alert {
+  &.live {
+    h2, h3 {
+      color: red;
+    }
+  }
+  &.test {
+    h2, h3 {
+      color: green;
+    }
+  }
+  &.cancel {
+    h2, h3 {
+      color: blue;
+    }
+  }
+  &.create {
+    .methods, .locations {
+      ul {
+        margin: 0;
+        padding: 0;
+      }
+      li {
+        list-style: none;
+        &::before {
+          content: "\200B";
+        }
+      }
+    }
+  }
+}
+
+.summary {
+  .methods , .locations {
+    ul {
+      margin: 0;
+      padding: 0;
+    }
+    li {
+      color: #ccc;
+      position: relative;
+      list-style: none;
+
+      &::before {
+        position: absolute;
+        left: -1.5em;
+        content: "✗";
+      }
+    }
+
+    li.selected {
+      color: #000;
+
+      &::before {
+        content: "✓";
+      }
+    }
+  }
+}
+
+.inline {
+  display: inline;
+}

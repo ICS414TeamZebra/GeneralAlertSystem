@@ -2,9 +2,12 @@ const express = require('express');
 
 const router = express.Router();
 
-/* GET users listing. */
+const loggedIn = require('./../lib/loggedIn');
+
 router.get('/', (req, res, next) => {
-  res.send('respond with a resource');
+  if (loggedIn(req, res)) {
+    res.render('dashboard', { title: 'Dashboard' });
+  }
 });
 
 module.exports = router;

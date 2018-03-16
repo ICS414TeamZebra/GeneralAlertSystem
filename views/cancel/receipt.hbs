@@ -1,0 +1,27 @@
+<div class="alert cancel receipt">
+  <h2>Cancellation Receipt</h2>
+  <div class="summary">
+    {{#with summary}}
+    <h3>Cancelling: <span class="alert">{{ alertName }}</span></h3>
+    <h3>From: <span class="date">{{ alertDate }}</span></h3>
+    <h3>Message:</h3>
+    <p>{{ message }}</p>
+    <h3>Methods:</h3>
+    <ul class="methods">
+      {{#each methods}}
+        <li{{#if selected}} class="selected"{{/if}}>{{ name }}</li>
+      {{/each}}
+    </ul>
+    <h3>Locations:</h3>
+    <ul class="locations">
+      {{#each locations}}
+        <li{{#if selected}} class="selected"{{/if}}>{{ name }}</li>
+      {{/each}}
+    </ul>
+    {{/with}}
+  </div>
+  <h3>Sent: {{ date }}</h3>
+  <form class="inline" action="{{urlFinish}}" method="get">
+    <button>Finish</button>
+  </form>
+</div>

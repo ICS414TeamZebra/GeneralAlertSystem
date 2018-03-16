@@ -1,0 +1,35 @@
+{{#if live}}
+<div class="warning banner live">YOU ARE IN LIVE ALERT MODE</div>
+{{/if}}
+<div class="alert receipt {{ alertType }}">
+  <h2>Alert Receipt</h2>
+  <div class="summary">
+    {{#with summary}}
+    <h3>Event: <span class="event">{{ event }}</span></h3>
+    <h3>Message:</h3>
+    <p>{{ message }}</p>
+    <h3>Methods:</h3>
+    <ul class="methods">
+      {{#each methods}}
+        <li{{#if selected}} class="selected"{{/if}}>{{ name }}</li>
+      {{/each}}
+    </ul>
+    <h3>Locations:</h3>
+    <ul class="locations">
+      {{#each locations}}
+        <li{{#if selected}} class="selected"{{/if}}>{{ name }}</li>
+      {{/each}}
+    </ul>
+    {{/with}}
+  </div>
+  <h3>Sent: {{ date }}</h3>
+  <div>
+    <p>Was this alert sent in error?</p>
+    <form class="inline" action="{{urlCancel}}" method="get">
+      <button>Cancel this alert</button>
+    </form>
+  </div>
+  <form class="inline" action="{{urlFinish}}" method="get">
+    <button>Finish</button>
+  </form>
+</div>
