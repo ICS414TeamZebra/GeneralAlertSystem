@@ -5,27 +5,10 @@ const router = express.Router();
 const loggedIn = require('./../lib/loggedIn');
 const names = require('./../lib/names');
 const render = require('./../lib/alertRenderer');
+const debug = require('./../lib/debugger')('live');
 
 const alertType = 'live';
 const confirmString = 'LIVE ALERT';
-
-/*
-function consoleParams(req) {
-  console.log(req.baseUrl);
-  if (Object.keys(req.params).length > 0) {
-    console.log('PARAMS URL:');
-    console.log(req.params);
-  }
-  if (Object.keys(req.query).length > 0) {
-    console.log('PARAMS GET:');
-    console.log(req.query);
-  }
-  if (Object.keys(req.body).length > 0) {
-    console.log('PARAMS POST:');
-    console.log(req.body);
-  }
-}
-*/
 
 const demoAlert = {
   event: 'missile',
@@ -43,7 +26,7 @@ router.get('/', (req, res, next) => {
 
 router.get('/create', (req, res, next) => {
   if (loggedIn(req, res)) {
-    // consoleParams(req);
+    debug.params(req);
     const {
       event, message, methods = [], locations = [],
     } = req.body;
@@ -57,7 +40,7 @@ router.get('/create', (req, res, next) => {
 
 router.post('/create', (req, res, next) => {
   if (loggedIn(req, res)) {
-    // consoleParams(req);
+    debug.params(req);
 
     if (req.body.back) {
       res.redirect(301, '/dashboard');
@@ -66,7 +49,7 @@ router.post('/create', (req, res, next) => {
         event, message, methods = [], locations = [],
       } = req.body;
 
-      let validate = true;
+      const validate = true;
       if (validate) {
         // demo alertId
         const alertId = 0;
@@ -84,7 +67,7 @@ router.post('/create', (req, res, next) => {
 
 router.get('/confirm/:alertId', (req, res, next) => {
   if (loggedIn(req, res)) {
-    // consoleParams(req);
+    debug.params(req);
     const { alertId } = req.params;
     const {
       confirm = '', username = '', password = '',
@@ -98,7 +81,7 @@ router.get('/confirm/:alertId', (req, res, next) => {
 
 router.post('/confirm/:alertId', (req, res, next) => {
   if (loggedIn(req, res)) {
-    // consoleParams(req);
+    debug.params(req);
     if (req.body.back) {
       res.redirect(301, `${req.baseUrl}/create`);
     } else {
@@ -107,7 +90,7 @@ router.post('/confirm/:alertId', (req, res, next) => {
         confirm = '', username = '', password = '',
       } = req.body;
 
-      let validate = true;
+      const validate = true;
       if (validate) {
         res.redirect(301, `${req.baseUrl}/receipt/${alertId}`);
       } else {
@@ -123,9 +106,9 @@ router.post('/confirm/:alertId', (req, res, next) => {
 
 router.get('/receipt/:alertId', (req, res, next) => {
   if (loggedIn(req, res)) {
-    // consoleParams(req);
+    debug.params(req);
     const { alertId } = req.params;
-    const urlCancel = `/alert/cancel/${alertId}`;
+    const urlCancel = `/alert/cancel/create/${alertId}`;
     const urlFinish = '/dashboard';
     render.receipt(res, alertType, {
       urlCancel, urlFinish, ...demoAlert,

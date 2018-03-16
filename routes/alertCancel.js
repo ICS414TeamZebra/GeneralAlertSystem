@@ -3,10 +3,11 @@ const express = require('express');
 const router = express.Router();
 
 const loggedIn = require('./../lib/loggedIn');
-const names = require('./../lib/names');
 const render = require('./../lib/cancelRenderer');
 
 const confirmString = 'CANCEL ALERT';
+
+const debug = require('./../lib/debugger')('cancel');
 
 const demoAlerts = [
   {
@@ -33,17 +34,9 @@ router.get('/', (req, res, next) => {
   }
 });
 
-router.get('/:alertId', (req, res, next) => {
-  if (loggedIn(req, res)) {
-    const { alertId } = req.params;
-    res.redirect(301, `${req.baseUrl}/create/${alertId}`);
-  }
-});
-
-
 router.get('/create', (req, res, next) => {
   if (loggedIn(req, res)) {
-    // consoleParams(req);
+    debug.params(req);
 
     const urlForm = `${req.baseUrl}/create`;
     render.create(res, {
@@ -54,7 +47,8 @@ router.get('/create', (req, res, next) => {
 
 router.get('/create/:alertId', (req, res, next) => {
   if (loggedIn(req, res)) {
-    // consoleParams(req);
+    debug.params(req);
+
     const { alertId } = req.params;
     const {
       message, methods = [], locations = [],
@@ -73,7 +67,7 @@ router.get('/create/:alertId', (req, res, next) => {
 
 router.post('/create', (req, res, next) => {
   if (loggedIn(req, res)) {
-    // consoleParams(req);
+    debug.params(req);
 
     if (req.body.back) {
       res.redirect(301, '/dashboard');
@@ -100,7 +94,8 @@ router.post('/create', (req, res, next) => {
 
 router.get('/confirm/:alertId', (req, res, next) => {
   if (loggedIn(req, res)) {
-    // consoleParams(req);
+    debug.params(req);
+
     const { alertId } = req.params;
     const {
       confirm = '', username = '', password = '',
@@ -114,7 +109,8 @@ router.get('/confirm/:alertId', (req, res, next) => {
 
 router.post('/confirm/:alertId', (req, res, next) => {
   if (loggedIn(req, res)) {
-    // consoleParams(req);
+    debug.params(req);
+
     const { alertId } = req.params;
     if (req.body.back) {
       res.redirect(301, `${req.baseUrl}/create/${alertId}`);
@@ -140,7 +136,8 @@ router.post('/confirm/:alertId', (req, res, next) => {
 
 router.get('/receipt/:alertId', (req, res, next) => {
   if (loggedIn(req, res)) {
-    // consoleParams(req);
+    debug.params(req);
+
     const { alertId } = req.params;
     const urlCancel = `/alert/cancel/${alertId}`;
     const urlFinish = '/dashboard';
