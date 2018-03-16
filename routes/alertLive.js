@@ -28,7 +28,7 @@ function consoleParams(req) {
 */
 
 const demoAlert = {
-  event: names.events.missile,
+  event: 'missile',
   message: 'BALLISTIC MISSILE THREAT INBOUND TO HAWAII. SEEK IMMEDIATE SHELTER. THIS IS NOT A DRILL.',
   methods: ['eas'],
   locations: ['hawaii'],
@@ -100,7 +100,7 @@ router.post('/confirm/:alertId', (req, res, next) => {
   if (loggedIn(req, res)) {
     // consoleParams(req);
     if (req.body.back) {
-      res.redirect(301, '/create');
+      res.redirect(301, `${req.baseUrl}/create`);
     } else {
       const { alertId } = req.params;
       const {
