@@ -5,6 +5,8 @@ const router = express.Router();
 const loggedIn = require('./../lib/loggedIn');
 const render = require('./../lib/cancelRenderer');
 
+const DeviceManager = require('./../lib/DeviceManager');
+
 const confirmString = 'CANCEL ALERT';
 
 const debug = require('./../lib/debugger')('cancel');
@@ -100,9 +102,11 @@ router.get('/confirm/:alertId', (req, res, next) => {
     const {
       confirm = '', username = '', password = '',
     } = req.body;
+    const alert = demoCancel;
+
     const urlForm = `${req.baseUrl}/confirm/${alertId}`;
     render.confirm(res, {
-      alertId, username, confirmString, urlForm, ...demoCancel,
+      alertId, username, confirmString, urlForm, ...alert,
     });
   }
 });
@@ -113,21 +117,30 @@ router.post('/confirm/:alertId', (req, res, next) => {
 
     const { alertId } = req.params;
     if (req.body.back) {
+
+
       res.redirect(301, `${req.baseUrl}/create/${alertId}`);
     } else {
       const { alertId } = req.params;
       const {
         confirm = '', username = '', password = '',
       } = req.body;
+      const alert = demoCancel;
 
       let validate = true;
       if (validate) {
+        for (const device of alert.methods) {
+          DeviceManager.open(device);
+          DeviceManager.warningOFF(device, alert.message, 'result?');
+          DeviceManager.close(device);
+        }
+
         res.redirect(301, `${req.baseUrl}/receipt/${alertId}`);
       } else {
         const err = 'you did a bad';
         const urlForm = `${req.baseUrl}/confirm/${alertId}`;
         render.confirm(res, {
-          alertId, username, confirmString, urlForm, ...demoCancel,
+          alertId, username, confirmString, urlForm, ...alert,
         }, err);
       }
     }
@@ -141,8 +154,10 @@ router.get('/receipt/:alertId', (req, res, next) => {
     const { alertId } = req.params;
     const urlCancel = `/alert/cancel/${alertId}`;
     const urlFinish = '/dashboard';
+    const alert = demoCancel;
+
     render.receipt(res, {
-      alertId, urlCancel, urlFinish, ...demoCancel,
+      alertId, urlCancel, urlFinish, ...alert,
     });
   }
 });

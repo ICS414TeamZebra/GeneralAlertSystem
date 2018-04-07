@@ -7,6 +7,8 @@ const names = require('./../lib/names');
 const render = require('./../lib/alertRenderer');
 const debug = require('./../lib/debugger')('live');
 
+const DeviceManager = require('./../lib/DeviceManager');
+
 const alertType = 'live';
 const confirmString = 'LIVE ALERT';
 
@@ -72,9 +74,10 @@ router.get('/confirm/:alertId', (req, res, next) => {
     const {
       confirm = '', username = '', password = '',
     } = req.body;
+    const alert = demoAlert; // testing only
     const urlForm = `${req.baseUrl}/confirm/${alertId}`;
     render.confirm(res, alertType, {
-      username, confirmString, urlForm, ...demoAlert,
+      alertId, username, confirmString, urlForm, ...alert,
     });
   }
 });
@@ -89,15 +92,22 @@ router.post('/confirm/:alertId', (req, res, next) => {
       const {
         confirm = '', username = '', password = '',
       } = req.body;
+      const alert = demoAlert; // testing only
 
       const validate = true;
       if (validate) {
+        for (const device of alert.methods) {
+          DeviceManager.open(device);
+          DeviceManager.warningON(device, alert.message, 'result?');
+          DeviceManager.close(device);
+        }
+
         res.redirect(301, `${req.baseUrl}/receipt/${alertId}`);
       } else {
         const err = 'you did a bad';
         const urlForm = `${req.baseUrl}/confirm/${alertId}`;
         render.confirm(res, alertType, {
-          username, confirmString, urlForm, ...demoAlert,
+          alertId, username, confirmString, urlForm, ...alert,
         }, err);
       }
     }
@@ -108,10 +118,11 @@ router.get('/receipt/:alertId', (req, res, next) => {
   if (loggedIn(req, res)) {
     debug.params(req);
     const { alertId } = req.params;
+    const alert = demoAlert; // testing only
     const urlCancel = `/alert/cancel/create/${alertId}`;
     const urlFinish = '/dashboard';
     render.receipt(res, alertType, {
-      urlCancel, urlFinish, ...demoAlert,
+      alertId, urlCancel, urlFinish, ...alert,
     });
   }
 });
