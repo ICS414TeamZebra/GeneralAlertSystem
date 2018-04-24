@@ -1,3 +1,8 @@
+{{#if error}}
+<div class="error">
+  Error: {{error}}
+</div>
+{{/if}}
 <div class="alert cancel confirm">
   <h2>Cancellation Confirmation</h2>
   <div class="summary">
@@ -29,8 +34,8 @@
     <h3><label for="confirm">Type {{confirmString}} to confirm.</label></h3>
     <input type="text" id="confirm" name="confirm"></input>
 
-  <div class="buttons">
-    <button type="submit" name="back" value="Back">Back</button>
-    <button type="submit" name="send" value="Send">Send</button>
-  </div></form>
+    <div class="buttons">
+
+    </div>
+  </form>
 </div>

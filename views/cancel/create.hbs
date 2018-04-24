@@ -1,3 +1,8 @@
+{{#if error}}
+<div class="error">
+  Error: {{error}}
+</div>
+{{/if}}
 <div class="alert cancel create">
   <h2>Cancel Alert</h2>
   <form action="{{urlForm}}" method="post">
@@ -22,11 +27,12 @@
       <h3><legend>Locations</legend></h3>
       <ul>
         {{#each locations}}
-          <li><label for="location-{{id}}"></label><input type="checkbox" id="location-{{id}}" name="location" value="{{id}}{{#if selected}} checked{{/if}}">{{name}}</li>
+          <li><label for="location-{{id}}"></label><input type="checkbox" id="location-{{id}}" name="locations" value="{{id}}{{#if selected}} checked{{/if}}">{{name}}</li>
         {{/each}}
       </ul>
     </fieldset>
-    <button type="submit" name="back" value="Back">Back</button>
-    <button type="submit" name="continue" value="Continue">Continue</button>
+    <div class="buttons">
+      <button type="submit" name="confirm" value="Confirm" style="float: right;">Confirm</button>
+      <button type="submit" name="back" value="Back" style="float: left;">Back</button>    </div>
   </form>
 </div>

@@ -1,2 +1,11 @@
-<h2>{{title}}</h2>
-<p>Welcome to {{title}}</p>
+<h2>Login</h2>
+<form action="{{url}}" method="post">
+  {{#if message}}<div class="message">{{message}}</div>{{/if}}
+  <div><label for="username">Username: <input type="text" id="username" name="username" value="{{username}}"></label></div>
+  <div>
+    <label for="password">Password: <input type="password" id="password" name="password"></label>
+  </div>
+  <div>
+    <button type="submit">Submit</button>
+  </div>
+</form>
