@@ -1,7 +1,5 @@
 require('app-module-path').addPath(__dirname);
 
-require('db/init');
-
 const express = require('express');
 const path = require('path');
 const favicon = require('serve-favicon');
@@ -17,7 +15,7 @@ routes.index = require('routes/index');
 routes.login = require('routes/login');
 routes.live = require('routes/alertLive');
 routes.test = require('routes/alertTest');
-routes.cancel = require('routes/alertCancel');
+routes.cancel = require('routes/cancel');
 
 const app = express();
 
@@ -56,7 +54,7 @@ app.use((req, res, next) => {
 app.use('/', routes.index);
 app.use('/alert/live', routes.live);
 app.use('/alert/test', routes.test);
-app.use('/alert/cancel', routes.cancel);
+app.use('/cancel', routes.cancel);
 
 // catch 404 and forward to error handler
 app.use((req, res, next) => {

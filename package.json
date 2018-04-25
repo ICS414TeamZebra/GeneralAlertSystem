@@ -4,6 +4,7 @@
   "private": true,
   "scripts": {
     "start": "node ./bin/www",
+    "init": "DEBUG=gas:* node ./init.js",
     "debug": "DEBUG=gas:* node ./bin/www",
     "test": "./node_modules/.bin/mocha **/**.spec.js",
     "lint": "./node_modules/.bin/eslint **/**.js"

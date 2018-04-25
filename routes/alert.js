@@ -1,8 +1,6 @@
-// DO NOT USE YET LOL
-
 const express = require('express');
 const names = require('lib/names');
-const render = require('lib/alertRenderer');
+const render = require('./alertRenderer');
 const debugging = require('lib/debugger');
 const Alert = require('lib/Alert');
 const User = require('lib/User');
@@ -54,6 +52,24 @@ function validateConfirm(username, password, confirm, confirmString) {
   }
 }
 
+function alertActive(req, res, next, id) {
+  if (!Alert.exists(id)) {
+    const err = new Error(`Alert ${id} doesn't exist.`);
+    err.status = 404;
+    next(err);
+    return false;
+  } else if (Alert.checkSent(id)) {
+    if (req.originalUrl !== `${req.baseUrl}/receipt/${id}`) {
+      res.redirect(302, `${req.baseUrl}/receipt/${id}`);
+      return false;
+    }
+  } else if (Alert.checkCancelled(id)) {
+    res.redirect(302, `/cancel/receipt/${id}`);
+    return false;
+  }
+  return true;
+}
+
 function newRouter(alertType, confirmString, perform) {
   const router = express.Router();
   const debug = debugging(alertType);
@@ -80,7 +96,7 @@ function newRouter(alertType, confirmString, perform) {
 
   router.post('/create', (req, res) => {
     if (req.body.back) {
-      res.redirect(302, '/dashboard');
+      res.redirect(302, '/');
     } else {
       const {
         event,
@@ -100,11 +116,12 @@ function newRouter(alertType, confirmString, perform) {
       try {
         // demo alertId
         const alert = {
+          type: alertType,
           event,
           message,
           methods,
           locations,
-          user: req.session.username,
+          user: req.session.user,
           date: new Date(),
         };
         validateCreate(alert);
@@ -122,28 +139,22 @@ function newRouter(alertType, confirmString, perform) {
 
   router.get('/confirm/:alertId', (req, res, next) => {
     const { alertId } = req.params;
-    if (Alert.exists(alertId)) {
+    if (alertActive(req, res, next, alertId)) {
       const alert = Alert.get(alertId); // testing only
       const { username = '' } = req.body;
       const urlForm = `${req.baseUrl}/confirm/${alertId}`;
       render.confirm(res, alertType, {
         alertId, username, confirmString, urlForm, ...alert,
       });
-    } else {
-      const err = new Error(`Alert ${alertId} doesn't exist.`);
-      err.status = 404;
-      next(err);
     }
   });
 
   router.post('/confirm/:alertId', (req, res, next) => {
     const { alertId } = req.params;
     if (req.body.back) {
-      if (Alert.exists(alertId)) {
-        Alert.delete(alertId);
-      }
+      Alert.delete(alertId);
       res.redirect(302, `${req.baseUrl}/create`);
-    } else if (Alert.exists(alertId)) {
+    } else if (alertActive(req, res, next, alertId)) {
       const alert = Alert.get(alertId);
       const {
         confirm = '',
@@ -155,7 +166,7 @@ function newRouter(alertType, confirmString, perform) {
         validateConfirm(username, password, confirm, confirmString);
         debug.log(`Sending alert ${alertId}`, alert);
         perform(alert);
-        Alert.send(alertId, req.session.username, username);
+        Alert.send(alertId, req.session.user, username);
         res.redirect(302, `${req.baseUrl}/receipt/${alertId}`);
       } catch (e) {
         const err = e.message;
@@ -164,28 +175,18 @@ function newRouter(alertType, confirmString, perform) {
           alertId, username, confirmString, urlForm, ...alert,
         }, err);
       }
-    } else {
-      const err = new Error(`Alert ${alertId} doesn't exist.`);
-      err.status = 404;
-      next(err);
-      // render.error(res, alertType, alertId);
     }
   });
 
   router.get('/receipt/:alertId', (req, res, next) => {
     const { alertId } = req.params;
-    if (Alert.exists(alertId)) {
+    if (alertActive(req, res, next, alertId)) {
       const alert = Alert.get(alertId); // testing only
-      const urlCancel = `/alert/cancel/create/${alertId}`;
-      const urlFinish = '/dashboard';
+      const urlCancel = `/cancel/create/${alertId}`;
+      const urlFinish = '/';
       render.receipt(res, alertType, {
         alertId, urlCancel, urlFinish, ...alert,
       });
-    } else {
-      const err = new Error(`Alert ${alertId} doesn't exist.`);
-      err.status = 404;
-      next(err);
-      // render.error(res, alertType, alertId);
     }
   });
 

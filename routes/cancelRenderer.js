@@ -4,39 +4,22 @@ const names = require('lib/names');
 
 function create(res, args, err) {
   const {
-    alert,
+    alertId,
     alerts,
     message,
-    methods = [],
-    locations = [],
     urlForm,
   } = args;
 
-  // console.log(alerts);
-
-  const alertsSelected = alerts.map((salert, index) => {
-    // console.log(salert);
-    return {
-      id: salert.id,
-      name: names.events[salert.event],
-      selected: (alert && alert.id === salert.id) || false,
-    };
-  });
-  // console.log(alertsSelected);
-
-  const methodsSelected = Object.entries(names.cancelMethods).map(([id, name]) => (
-    { id, name, selected: methods.includes(id) }
-  ));
-  const locationsSelected = Object.entries(names.locations).map(([id, name]) => (
-    { id, name, selected: locations.includes(id) }
-  ));
+  const alertsSelected = Object.values(alerts).map(alert => ({
+    id: alert.id,
+    name: `${names.events[alert.event]} - sent ${new Date(alert.sent.date).toUTCString()}`,
+    selected: (alertId === alert.id),
+  }));
 
   res.render('cancel/create', {
     error: err,
     alerts: alertsSelected,
     message,
-    methods: methodsSelected,
-    locations: locationsSelected,
     urlForm,
   });
 }
@@ -45,27 +28,22 @@ function confirm(res, args, err) {
   const {
     urlForm,
     alert,
-    date,
     message,
-    methods,
-    locations,
     confirmString,
     username = '',
   } = args;
 
 
-  const alertName = names.events[alert.event];
-  const alertDate = alert.date;
   const methodsSelected = Object.entries(names.cancelMethods).map(([id, name]) => (
-    { id, name, selected: methods.includes(id) }
+    { id, name, selected: alert.methods.includes(id) }
   ));
   const locationsSelected = Object.entries(names.locations).map(([id, name]) => (
-    { id, name, selected: locations.includes(id) }
+    { id, name, selected: alert.locations.includes(id) }
   ));
 
   const summary = {
-    alertName,
-    alertDate,
+    name: names.events[alert.event],
+    date: new Date(alert.sent.date).toUTCString(),
     message,
     methods: methodsSelected,
     locations: locationsSelected,
@@ -85,34 +63,28 @@ function confirm(res, args, err) {
 function receipt(res, args) {
   const {
     alert,
-    date,
-    message,
-    methods,
-    locations,
     urlFinish,
   } = args;
 
   // demo info
-  const alertName = names.events[alert.event];
-  const alertDate = alert.date;
   const methodsSelected = Object.entries(names.cancelMethods).map(([id, name]) => (
-    { id, name, selected: methods.includes(id) }
+    { id, name, selected: alert.methods.includes(id) }
   ));
   const locationsSelected = Object.entries(names.locations).map(([id, name]) => (
-    { id, name, selected: locations.includes(id) }
+    { id, name, selected: alert.locations.includes(id) }
   ));
 
   const summary = {
-    alertName,
-    alertDate,
-    message,
+    name: names.events[alert.event],
+    date: new Date(alert.sent.date).toUTCString(),
+    message: alert.cancelled.message,
     methods: methodsSelected,
     locations: locationsSelected,
   };
 
   res.render('cancel/receipt', {
+    alert,
     summary,
-    date,
     urlFinish,
   });
 }

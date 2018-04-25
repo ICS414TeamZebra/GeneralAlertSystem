@@ -1,6 +1,6 @@
 const DeviceManager = require('lib/DeviceManager');
 
-const router = require('lib/alertRouter')(
+const router = require('./alert')(
   'test', 'TEST ALERT',
   (alert) => {
     const config = '';

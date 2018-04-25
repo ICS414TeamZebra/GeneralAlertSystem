@@ -15,7 +15,7 @@
     </select>
     <h3><label for="message">Cancellation Message</label></h3>
     <textarea id="message" name="message">{{message}}</textarea>
-    <fieldset class="methods">
+    {{!-- <fieldset class="methods">
       <h3><legend>Methods</legend></h3>
       <ul>
         {{#each methods}}
@@ -30,7 +30,7 @@
           <li><label for="location-{{id}}"></label><input type="checkbox" id="location-{{id}}" name="locations" value="{{id}}{{#if selected}} checked{{/if}}">{{name}}</li>
         {{/each}}
       </ul>
-    </fieldset>
+    </fieldset> --}}
     <div class="buttons">
       <button type="submit" name="confirm" value="Confirm" style="float: right;">Confirm</button>
       <button type="submit" name="back" value="Back" style="float: left;">Back</button>    </div>

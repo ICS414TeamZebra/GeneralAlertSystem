@@ -77,17 +77,13 @@ function confirm(res, alertType, args, err) {
 
 function receipt(res, alertType, args) {
   const {
-    alertId,
     event,
     message,
     methods,
     locations,
-    date,
-    urlCancel,
-    urlFinish,
   } = args;
 
-  // demo info
+
   const eventSelected = names.events[event];
   const methodsSelected = Object.entries(names.alertMethods).map(([id, name]) => (
     { id, name, selected: methods.includes(id) }
@@ -103,14 +99,25 @@ function receipt(res, alertType, args) {
     locations: locationsSelected,
   };
 
-  res.render('alert/receipt', {
-    alertType,
-    live: (alertType === 'live'),
+  const {
     alertId,
-    summary,
     date,
     urlCancel,
     urlFinish,
+    user,
+    sent,
+  } = args;
+
+  res.render('alert/receipt', {
+    alertType,
+    live: (alertType === 'live'),
+    summary,
+    alertId,
+    date,
+    urlCancel,
+    urlFinish,
+    user,
+    sent,
   });
 }
 

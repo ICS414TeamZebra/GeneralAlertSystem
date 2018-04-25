@@ -7,8 +7,8 @@
   <h2>Cancellation Confirmation</h2>
   <div class="summary">
     {{#with summary}}
-    <h3>Cancelling: <span class="alert">{{ alertName }}</span></h3>
-    <h3>From: <span class="date">{{ alertDate }}</span></h3>
+    <h3>Cancelling: <span class="alert">{{ name }}</span></h3>
+    <h3>Originally sent: <span class="date">{{ date }}</span></h3>
     <h3>Message:</h3>
     <p>{{ message }}</p>
     <h3>Methods:</h3>
@@ -28,14 +28,16 @@
   <form action="{{urlForm}}" method="post">
     <fieldset class="supervisor">
       <h3><legend>Supervisor Confirmation</legend></h3>
-      <label for="username">Username: <input type="text" id="username" name="username">{{username}}</input></label>
-      <label for="password">Password: <input type="password" id="password" name="password"></input></label>
+      <label for="username">Username: <input type="text" id="username" name="username" value="{{username}}"></label>
+      <label for="password">Password: <input type="password" id="password" name="password"></label>
     </fieldset>
     <h3><label for="confirm">Type {{confirmString}} to confirm.</label></h3>
-    <input type="text" id="confirm" name="confirm"></input>
-
+    <input type="text" id="confirm" name="confirm">
     <div class="buttons">
-
+    <div class="buttons">
+      <button type="submit" name="submit" value="Confirm" style="float: right;">Confirm</button>
+      <button type="submit" name="back" value="Back" style="float: left;">Back</button>
+    </div>
     </div>
   </form>
 </div>

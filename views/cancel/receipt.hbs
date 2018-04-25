@@ -2,8 +2,8 @@
   <h2>Cancellation Receipt</h2>
   <div class="summary">
     {{#with summary}}
-    <h3>Cancelling: <span class="alert">{{ alertName }}</span></h3>
-    <h3>From: <span class="date">{{ alertDate }}</span></h3>
+    <h3>Cancelling: <span class="alert">{{ name }}</span></h3>
+    <h3>Originally sent: <span class="date">{{ date }}</span></h3>
     <h3>Message:</h3>
     <p>{{ message }}</p>
     <h3>Methods:</h3>
@@ -20,7 +20,18 @@
     </ul>
     {{/with}}
   </div>
-  <h3>Sent: {{ date }}</h3>
+  <h3>System Information:</h3>
+  <ul>
+    {{#with alert}}
+    <li>Created by: {{ user }}</li>
+    <li>Sent on: {{ sent.date }}</li>
+    <li>Sent by: {{ sent.user }}</li>
+    <li>Send approved by: {{ sent.supervisor }}</li>
+    <li>Cancelled on: {{ cancelled.date }}</li>
+    <li>Cancelled by: {{ cancelled.user }}</li>
+    <li>Cancel approved by: {{ cancelled.supervisor }}</li>
+    {{/with}}
+  </ul>
   <form class="inline" action="{{urlFinish}}" method="get">
     <button>Finish</button>
   </form>

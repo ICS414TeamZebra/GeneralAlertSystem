@@ -22,7 +22,14 @@
     </ul>
     {{/with}}
   </div>
-  <h3>Sent: {{ date }}</h3>
+  <h3>System Information:</h3>
+  <ul>
+    <li>Created on: {{ date }}</li>
+    <li>Created by: {{ user }}</li>
+    <li>Sent on: {{ sent.date }}</li>
+    <li>Sent by: {{ sent.user }}</li>
+    <li>Send approved by: {{ sent.supervisor }}</li>
+  </ul>
   <div>
     <p>Was this alert sent in error?</p>
     <form class="inline" action="{{urlCancel}}" method="get">
