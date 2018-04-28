@@ -4,6 +4,7 @@ const render = require('./alertRenderer');
 const debugging = require('lib/debugger');
 const Alert = require('lib/Alert');
 const User = require('lib/User');
+const ValidationError = require('lib/ValidationError');
 
 // const demoAlert = {
 //   event: names.events.missile,
@@ -13,42 +14,50 @@ const User = require('lib/User');
 // };
 
 function validateCreate(alert) {
+  const errors = [];
   if (!alert.event) {
-    throw new Error('No event chosen.');
-  }
-  if (!(alert.event in names.events)) {
-    throw new Error('Invalid event chosen.');
+    errors.push('No event selected: please select an event.');
+  } else if (!(alert.event in names.events)) {
+    errors.push(`Invalid event chosen: '${alert.event}' isn't a valid event.`);
   }
   if (!alert.message) {
-    throw new Error('No message provided.');
+    errors.push('No message provided: please provide a message.');
   }
   if (alert.methods.length === 0) {
-    throw new Error('No methods chosen.');
+    errors.push('No methods chosen: please select at least one method.');
+  } else {
+    for (const method of alert.methods) {
+      if (!(method in names.alertMethods)) {
+        errors.push(`Invalid method chosen: '${method}' isn't a valid method.`);
+      }
+    }
   }
   if (alert.locations.length === 0) {
-    throw new Error('No locations chosen.');
-  }
-  for (const method of alert.methods) {
-    if (!(method in names.alertMethods)) {
-      throw new Error(`Invalid method ${method}.`);
+    errors.push('No locations chosen: please select at least one location.');
+  } else {
+    for (const location of alert.locations) {
+      if (!(location in names.locations)) {
+        errors.push(`Invalid location chosen: '${location}' isn't a valid location.`);
+      }
     }
   }
-  for (const location of alert.locations) {
-    if (!(location in names.locations)) {
-      throw new Error(`Invalid location ${location}.`);
-    }
+  if (errors.length > 0) {
+    throw new ValidationError(errors);
   }
 }
 
 function validateConfirm(username, password, confirm, confirmString) {
+  const errors = [];
   if (confirm !== confirmString) {
-    throw new Error('Incorrect confirmation string.');
+    errors.push('Incorrect confirmation string.');
   }
   if (!User.checkLogin(username, password)) {
-    throw new Error('Incorrect username or password.');
+    errors.push('Incorrect username or password.');
+  } else if (!User.checkRole(username, 'supervisor')) {
+    errors.push(`User ${username} isn't a supervisor.`);
   }
-  if (!User.checkRole(username, 'supervisor')) {
-    throw new Error(`User ${username} isn't a supervisor.`);
+  if (errors.length > 0) {
+    throw new ValidationError(errors);
   }
 }
 
@@ -128,11 +137,10 @@ function newRouter(alertType, confirmString, perform) {
         const alertId = Alert.create(alert);
         res.redirect(302, `${req.baseUrl}/confirm/${alertId}`);
       } catch (e) {
-        const err = e.message;
         const urlForm = `${req.baseUrl}/create`;
         render.create(res, alertType, {
           event, message, methods, locations, urlForm,
-        }, err);
+        }, e);
       }
     }
   });
@@ -169,11 +177,10 @@ function newRouter(alertType, confirmString, perform) {
         Alert.send(alertId, req.session.user, username);
         res.redirect(302, `${req.baseUrl}/receipt/${alertId}`);
       } catch (e) {
-        const err = e.message;
         const urlForm = `${req.baseUrl}/confirm/${alertId}`;
         render.confirm(res, alertType, {
           alertId, username, confirmString, urlForm, ...alert,
-        }, err);
+        }, e);
       }
     }
   });

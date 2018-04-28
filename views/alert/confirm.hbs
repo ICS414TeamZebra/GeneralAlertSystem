@@ -1,9 +1,14 @@
 {{#if live}}
 <div class="warning banner live">YOU ARE IN LIVE ALERT MODE</div>
 {{/if}}
-{{#if error}}
+{{#if errors}}
 <div class="error">
-  Error: {{error}}
+  {{errors.message}}
+  <ul>
+    {{#each errors.list}}
+    <li>{{this}}</li>
+    {{/each}}
+  </ul>
 </div>
 {{/if}}
 <div class="alert confirm {{ alertType }}">

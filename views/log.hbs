@@ -1,2 +1,18 @@
 <h1>{{title}}</h1>
-<p>Welcome to {{title}}</p>
+<table>
+  <thead>
+    <tr>
+      <th>Date</th>
+      <th>Message</th>
+    </tr>
+  </thead>
+  <tbody>
+    {{#each actions}}
+    <tr>
+      <td>{{date}}</td>
+      <td>{{message}}</td>
+    </tr>
+    {{/each}}
+  </tbody>
+</ul>
+<p><a href="/">Back to Dashboard</a></p>

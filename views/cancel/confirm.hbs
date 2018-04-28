@@ -1,6 +1,11 @@
-{{#if error}}
+{{#if errors}}
 <div class="error">
-  Error: {{error}}
+  {{errors.message}}
+  <ul>
+    {{#each errors.list}}
+    <li>{{this}}</li>
+    {{/each}}
+  </ul>
 </div>
 {{/if}}
 <div class="alert cancel confirm">

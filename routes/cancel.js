@@ -1,5 +1,6 @@
 const DeviceManager = require('lib/DeviceManager');
 const debug = require('lib/debugger')('cancel');
+const ValidationError = require('lib/ValidationError');
 
 function perform(alert) {
   const config = '';
@@ -7,15 +8,22 @@ function perform(alert) {
     DeviceManager.open(device);
     DeviceManager.configure(config);
     if (alert.type === 'live') {
-      DeviceManager.warningOFF(device, alert.message);
+      DeviceManager.warningOFF(device, alert.cancelled.message);
     }
     DeviceManager.close(device);
   }
 }
 
-function validateCreate(alert) {
-  if (!alert.cancelled.message) {
-    throw new Error('No message provided.');
+function validateCreate(alert, message) {
+  const errors = [];
+  if (!alert) {
+    errors.push('Please select an alert.');
+  }
+  if (!message) {
+    errors.push('No message provided.');
+  }
+  if (errors.length > 0) {
+    throw new ValidationError(errors);
   }
 }
 
@@ -24,14 +32,17 @@ const User = require('lib/User');
 const confirmString = 'CANCEL ALERT';
 
 function validateConfirm(username, password, confirm) {
+  const errors = [];
   if (confirm !== confirmString) {
-    throw new Error('Incorrect confirmation string.');
+    errors.push('Incorrect confirmation string.');
   }
   if (!User.checkLogin(username, password)) {
-    throw new Error('Incorrect username or password.');
+    errors.push('Incorrect username or password.');
+  } else if (!User.checkRole(username, 'supervisor')) {
+    errors.push(`User ${username} isn't a supervisor.`);
   }
-  if (!User.checkRole(username, 'supervisor')) {
-    throw new Error(`User ${username} isn't a supervisor.`);
+  if (errors.length > 0) {
+    throw new ValidationError(errors);
   }
 }
 
@@ -71,7 +82,7 @@ router.get('/', (req, res) => {
   res.redirect(302, `${req.baseUrl}/create`);
 });
 
-router.get('/create', (req, res, next) => {
+router.get('/create', (req, res) => {
   const alerts = Alert.all().filter(alert => (alert.status === 'sent'));
   const urlForm = `${req.baseUrl}/create`;
   render.create(res, {
@@ -95,20 +106,19 @@ router.get('/create/:alertId', (req, res, next) => {
   }
 });
 
-router.post('/create', (req, res, next) => {
+router.post('/create', (req, res) => {
   const alertId = req.body.alert;
   if (req.body.back) {
     res.redirect(302, '/');
-  } else if (alertActive(req, res, next, alertId)) {
+  } else { // } if (alertActive(req, res, next, alertId)) {
     const { message } = req.body;
     try {
       const alert = Alert.get(alertId);
+      validateCreate(alert, message);
       alert.cancelled = { message };
-      validateCreate(alert);
       Alert.update(alertId, alert);
       res.redirect(302, `${req.baseUrl}/confirm/${alertId}`);
     } catch (e) {
-      const err = e.message;
       const urlForm = `${req.baseUrl}/create`;
       const alerts = Alert.all().filter(alert => (alert.status === 'sent'));
       render.create(res, {
@@ -116,7 +126,7 @@ router.post('/create', (req, res, next) => {
         alerts,
         message,
         urlForm,
-      }, err);
+      }, e);
     }
   }
 });
@@ -129,12 +139,11 @@ router.post('/create/:alertId', (req, res, next) => {
     const { message } = req.body;
     try {
       const alert = Alert.get(alertId);
+      validateCreate(alert, message);
       alert.cancelled = { message };
-      validateCreate(alert);
       Alert.update(alertId, alert);
       res.redirect(302, `${req.baseUrl}/confirm/${alertId}`);
     } catch (e) {
-      const err = e.message;
       const urlForm = `${req.baseUrl}/create/${alertId}`;
       const alerts = Alert.all().filter(alert => (alert.status === 'sent'));
       render.create(res, {
@@ -142,23 +151,25 @@ router.post('/create/:alertId', (req, res, next) => {
         alerts,
         message,
         urlForm,
-      }, err);
+      }, e);
     }
   }
 });
 
 router.get('/confirm/:alertId', (req, res, next) => {
   const { alertId } = req.params;
-  const { username = '' } = req.body;
-  const alert = Alert.get(alertId); // testing only
-  const urlForm = `${req.baseUrl}/confirm/${alertId}`;
-  render.confirm(res, {
-    username,
-    confirmString,
-    urlForm,
-    alert,
-    message: alert.cancelled.message,
-  });
+  if (alertActive(req, res, next, alertId)) {
+    const { username = '' } = req.body;
+    const alert = Alert.get(alertId); // testing only
+    const urlForm = `${req.baseUrl}/confirm/${alertId}`;
+    render.confirm(res, {
+      username,
+      confirmString,
+      urlForm,
+      alert,
+      message: alert.cancelled.message,
+    });
+  }
 });
 
 router.post('/confirm/:alertId', (req, res, next) => {
@@ -180,7 +191,6 @@ router.post('/confirm/:alertId', (req, res, next) => {
       Alert.cancel(alertId, req.session.user, username);
       res.redirect(302, `${req.baseUrl}/receipt/${alertId}`);
     } catch (e) {
-      const err = e.message;
       const urlForm = `${req.baseUrl}/confirm/${alertId}`;
       render.confirm(res, {
         username,
@@ -188,7 +198,7 @@ router.post('/confirm/:alertId', (req, res, next) => {
         urlForm,
         alert,
         message: alert.cancelled.message,
-      }, err);
+      }, e);
     }
   }
 });
