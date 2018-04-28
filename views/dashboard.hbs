@@ -7,6 +7,23 @@
   <li><a href="/log">See all system actions</a></li>
 </ul>
 <h3>Recent Alerts</h3>
-<ul>
-  <li>...</li>
-</ul>
+<table>
+  <thead>
+    <tr>
+      <th>Date</th>
+      <th>Type</th>
+      <th>Event</th>
+      <th>Status</th>
+    </tr>
+  </thead>
+  <tbody>
+    {{#each alerts}}
+    <tr>
+      <td>{{date}}</td>
+      <td>{{type}}</td>
+      <td>{{event}}</td>
+      <td>{{status}}</td>
+    </tr>
+    {{/each}}
+  </tbody>
+</table>

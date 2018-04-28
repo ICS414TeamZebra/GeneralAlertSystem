@@ -6,7 +6,7 @@ function perform(alert) {
   const config = '';
   for (const device of alert.methods) {
     DeviceManager.open(device);
-    DeviceManager.configure(config);
+    DeviceManager.configure(device, config);
     if (alert.type === 'live') {
       DeviceManager.warningOFF(device, alert.cancelled.message);
     }
