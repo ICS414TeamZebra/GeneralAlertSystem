@@ -47,13 +47,17 @@ function validateCreate(alert) {
 }
 
 function validateConfirm(username, password, confirm, confirmString) {
+  const errors = [];
   if (confirm !== confirmString) {
-    throw new Error('Incorrect confirmation string.');
+    errors.push('Incorrect confirmation string.');
   }
   if (!User.checkLogin(username, password)) {
-    throw new Error('Incorrect username or password.');
+    errors.push('Incorrect username or password.');
   } else if (!User.checkRole(username, 'supervisor')) {
-    throw new Error(`User ${username} isn't a supervisor.`);
+    errors.push(`User ${username} isn't a supervisor.`);
+  }
+  if (errors.length > 0) {
+    throw new ValidationError(errors);
   }
 }
 
