@@ -1,42 +1,46 @@
-{{#if live}}
-<div class="warning banner live">YOU ARE IN LIVE ALERT MODE</div>
-{{/if}}
-<div class="alert receipt {{ alertType }}">
-  <h2>Alert Receipt</h2>
-  <div class="summary">
-    {{#with summary}}
-    <h3>Event: <span class="event">{{ event }}</span></h3>
-    <h3>Message:</h3>
-    <p>{{ message }}</p>
-    <h3>Methods:</h3>
-    <ul class="methods">
-      {{#each methods}}
-        <li{{#if selected}} class="selected"{{/if}}>{{ name }}</li>
-      {{/each}}
-    </ul>
-    <h3>Locations:</h3>
-    <ul class="locations">
-      {{#each locations}}
-        <li{{#if selected}} class="selected"{{/if}}>{{ name }}</li>
-      {{/each}}
-    </ul>
-    {{/with}}
-  </div>
-  <h3>System Information:</h3>
-  <ul>
-    <li>Created on: {{ date }}</li>
-    <li>Created by: {{ user }}</li>
-    <li>Sent on: {{ sent.date }}</li>
-    <li>Sent by: {{ sent.user }}</li>
-    <li>Send approved by: {{ sent.supervisor }}</li>
-  </ul>
-  <div>
-    <p>Was this alert sent in error?</p>
-    <form class="inline" action="{{urlCancel}}" method="get">
-      <button>Cancel this alert</button>
-    </form>
-  </div>
-  <form class="inline" action="{{urlFinish}}" method="get">
-    <button style="float: right;">Finish</button>
-  </form>
+<div class="card" style="height: 100vh; width: 60vw;">
+    <div class="container" style="text-align: center;">
+        {{#if live}}
+            <div class="warning banner live">YOU ARE IN LIVE ALERT MODE</div>
+        {{/if}}
+        <div class="alert receipt {{ alertType }}">
+            <h2>Alert Receipt</h2>
+            <div class="summary">
+                {{#with summary}}
+                    <h3>Event: <span class="event">{{ event }}</span></h3>
+                    <h3>Message:</h3>
+                    <p>{{ message }}</p>
+                    <h3>Methods:</h3>
+                    <ul class="methods">
+                        {{#each methods}}
+                            <li {{#if selected}} class="selected" {{/if}}>{{ name }}</li>
+                        {{/each}}
+                    </ul>
+                    <h3>Locations:</h3>
+                    <ul class="locations">
+                        {{#each locations}}
+                            <li {{#if selected}} class="selected" {{/if}}>{{ name }}</li>
+                        {{/each}}
+                    </ul>
+                {{/with}}
+            </div>
+            <h3>System Information:</h3>
+            <ul>
+                <li>Created on: {{ date }}</li>
+                <li>Created by: {{ user }}</li>
+                <li>Sent on: {{ sent.date }}</li>
+                <li>Sent by: {{ sent.user }}</li>
+                <li>Send approved by: {{ sent.supervisor }}</li>
+            </ul>
+            <div>
+                <p>Was this alert sent in error?</p>
+                <form class="inline" action="{{urlCancel}}" method="get">
+                    <button style="float: left;">Cancel this alert</button>
+                </form>
+            </div>
+            <form class="inline" action="{{urlFinish}}" method="get">
+                <button style="float: right;">Finish</button>
+            </form>
+        </div>
+    </div>
 </div>

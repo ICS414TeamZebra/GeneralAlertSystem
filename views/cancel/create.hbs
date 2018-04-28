@@ -1,26 +1,27 @@
-{{#if errors}}
-<div class="error">
-  {{errors.message}}
-  <ul>
-    {{#each errors.list}}
-    <li>{{this}}</li>
-    {{/each}}
-  </ul>
-</div>
-{{/if}}
-<div class="alert cancel create">
-  <h2>Cancel Alert</h2>
-  <form action="{{urlForm}}" method="post">
-    <h3><label for="alert">Alert to Cancel</label></h3>
-    <select id="alert" name="alert">
+<div class="card" style="height: 40vh; width: 40vw;">
+    <div class="container" style="text-align: center;">
+        {{#if errors}}
+            <div class="error">
+                {{errors.message}}
+                <ul>
+                    {{#each errors.list}}
+                        <li>{{this}}</li>
+                    {{/each}}
+                </ul>
+            </div>
+        {{/if}}
+        <div class="alert cancel create">
+            <h2>Cancel Alert</h2>
+            <form action="{{urlForm}}" method="post">
+                <h3><label for="alert">Alert to Cancel</label></h3>
+                <select id="alert" name="alert">
       <option selected></option>
       {{#each alerts}}
       <option value={{id}}{{#if selected}} selected{{/if}}>{{name}}</option>
       {{/each}}
     </select>
-    <h3><label for="message">Cancellation Message</label></h3>
-    <textarea id="message" name="message">{{message}}</textarea>
-    {{!-- <fieldset class="methods">
+                <h3><label for="message">Cancellation Message</label></h3>
+                <textarea id="message" name="message">{{message}}</textarea>{{!-- <fieldset class="methods">
       <h3><legend>Methods</legend></h3>
       <ul>
         {{#each methods}}
@@ -36,8 +37,10 @@
         {{/each}}
       </ul>
     </fieldset> --}}
-    <div class="buttons">
-      <button type="submit" name="confirm" value="Confirm" style="float: right;">Confirm</button>
-      <button type="submit" name="back" value="Back" style="float: left;">Back to Dashboard</button>    </div>
-  </form>
+                <div class="buttons">
+                    <button type="submit" name="confirm" value="Confirm" style="float: right;">Confirm</button>
+                    <button type="submit" name="back" value="Back" style="float: left;">Back to Dashboard</button> </div>
+            </form>
+        </div>
+    </div>
 </div>

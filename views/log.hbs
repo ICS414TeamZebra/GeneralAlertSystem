@@ -1,18 +1,22 @@
-<h1>{{title}}</h1>
-<table>
-  <thead>
-    <tr>
-      <th>Date</th>
-      <th>Message</th>
-    </tr>
-  </thead>
-  <tbody>
-    {{#each actions}}
-    <tr>
-      <td>{{date}}</td>
-      <td>{{message}}</td>
-    </tr>
-    {{/each}}
-  </tbody>
-</ul>
-<p><a href="/">Back to Dashboard</a></p>
+<div class="card" style="width: 60vw; height 100vh;">
+    <div class="container" style="text-align: center;">
+        <h1>{{title}}</h1>
+        <table>
+            <thead>
+                <tr>
+                    <th>Date</th>
+                    <th>Message</th>
+                </tr>
+            </thead>
+            <tbody>
+                {{#each actions}}
+                    <tr>
+                        <td>{{date}}</td>
+                        <td>{{message}}</td>
+                    </tr>
+                {{/each}}
+            </tbody>
+            </ul>
+            <p><a href="/">Back to Dashboard</a></p>
+    </div>
+</div>
