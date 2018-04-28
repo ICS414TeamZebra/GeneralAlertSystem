@@ -3,12 +3,15 @@ const debug = require('lib/debugger')('cancel');
 const ValidationError = require('lib/ValidationError');
 
 function perform(alert) {
-  const config = '';
+  const config = JSON.stringify({
+    message: alert.cancelled.message,
+    locations: alert.locations,
+  });
   for (const device of alert.methods) {
     DeviceManager.open(device);
     DeviceManager.configure(device, config);
     if (alert.type === 'live') {
-      DeviceManager.warningOFF(device, alert.cancelled.message);
+      DeviceManager.warningOFF(device);
     }
     DeviceManager.close(device);
   }
@@ -73,10 +76,10 @@ const express = require('express');
 
 const router = express.Router();
 
-router.use((req, res, next) => {
-  debug.params(req);
-  next();
-});
+// router.use((req, res, next) => {
+//   debug.params(req);
+//   next();
+// });
 
 router.get('/', (req, res) => {
   res.redirect(302, `${req.baseUrl}/create`);

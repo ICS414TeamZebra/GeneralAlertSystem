@@ -83,10 +83,10 @@ function newRouter(alertType, confirmString, perform) {
   const router = express.Router();
   const debug = debugging(alertType);
 
-  router.use((req, res, next) => {
-    debug.params(req);
-    next();
-  });
+  // router.use((req, res, next) => {
+  //   debug.params(req);
+  //   next();
+  // });
 
   router.get('/', (req, res) => {
     res.redirect(302, `${req.baseUrl}/create`);
