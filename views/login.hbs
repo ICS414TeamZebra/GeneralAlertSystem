@@ -1,11 +1,19 @@
-<h2>Login</h2>
-<form action="{{url}}" method="post">
-  {{#if message}}<div class="message">{{message}}</div>{{/if}}
-  <div><label for="username">Username: <input type="text" id="username" name="username" value="{{username}}"></label></div>
-  <div>
-    <label for="password">Password: <input type="password" id="password" name="password"></label>
-  </div>
-  <div>
-    <button type="submit">Submit</button>
-  </div>
-</form>
+<div class="card">
+    <div class="container" style="text-align: center;">
+        <h2 style="text-align: center; font-size: xx-large;">Login</h2>
+        <form action="{{url}}" method="post">
+            {{#if message}}
+                <div class="message">{{message}}</div>
+            {{/if}}
+            <div class="login">
+                <label for="username"> <input type="text" placeholder="Username" id="username" name="username" value="{{username}}"></label>
+            </div>
+            <div class="login">
+                <label for="password"> <input type="password" placeholder="Password" id="password" name="password"></label>
+            </div>
+            <div style="text-align: center; padding-bottom: 3%; padding-top: 3%;">
+                <button type="submit" class="login-button">Login</button>
+            </div>
+        </form>
+    </div>
+</div>
