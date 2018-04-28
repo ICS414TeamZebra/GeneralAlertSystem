@@ -2,7 +2,7 @@
 
 const names = require('lib/names');
 
-function create(res, args, err) {
+function create(res, args, errors) {
   const {
     alertId,
     alerts,
@@ -17,14 +17,14 @@ function create(res, args, err) {
   }));
 
   res.render('cancel/create', {
-    error: err,
+    errors,
     alerts: alertsSelected,
     message,
     urlForm,
   });
 }
 
-function confirm(res, args, err) {
+function confirm(res, args, errors) {
   const {
     urlForm,
     alert,
@@ -56,7 +56,7 @@ function confirm(res, args, err) {
     // never prefill password
     confirmString,
     urlForm,
-    error: err,
+    errors,
   });
 }
 

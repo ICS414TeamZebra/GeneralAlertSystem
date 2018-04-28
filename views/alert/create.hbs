@@ -1,9 +1,14 @@
 {{#if live}}
 <div class="warning banner live">YOU ARE IN LIVE ALERT MODE</div>
 {{/if}}
-{{#if error}}
+{{#if errors}}
 <div class="error">
-  Error: {{error}}
+  {{errors.message}}
+  <ul>
+    {{#each errors.list}}
+    <li>{{this}}</li>
+    {{/each}}
+  </ul>
 </div>
 {{/if}}
 <div class="alert create {{ alertType }}">
@@ -36,7 +41,7 @@
     </fieldset>
     <div class="buttons">
       <button type="submit" name="continue" value="Continue" style="float: right;">Continue</button>
-      <button type="submit" name="back" value="Back" style="float: left;">Back</button>
+      <button type="submit" name="back" value="Back" style="float: left;">Back to Dashboard</button>
     </div>
   </form>
 </div>
