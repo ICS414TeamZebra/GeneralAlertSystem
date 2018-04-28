@@ -57,3 +57,6 @@ typings/
 # dotenv environment variables file
 .env
 
+db/ActionLog.db
+db/Alert.db
+db/User.db
